@@ -113,7 +113,8 @@ AudioDeviceIOS::AudioDeviceIOS()
       num_detected_playout_glitches_(0),
       last_playout_time_(0),
       num_playout_callbacks_(0),
-      last_output_volume_change_time_(0) {
+      last_output_volume_change_time_(0),
+      audio_device_observer_(nullptr) {
   LOGI() << "ctor" << ios::GetCurrentThreadDescription();
   io_thread_checker_.Detach();
   thread_checker_.Detach();
@@ -335,6 +336,15 @@ int AudioDeviceIOS::GetRecordAudioParameters(AudioParameters* params) const {
   return 0;
 }
 
+int32_t AudioDeviceIOS::setAudioDeviceObserver(AduioDeviceObserver *observer) {
+  LOGI() << "setAudioDeviceObserver";
+  RTC_DCHECK_RUN_ON(&thread_checker_);
+
+  audio_device_observer_ = observer;
+
+  return 0;
+}
+
 void AudioDeviceIOS::OnInterruptionBegin() {
   RTC_DCHECK(thread_);
   LOGI() << "OnInterruptionBegin";
@@ -469,6 +479,14 @@ OSStatus AudioDeviceIOS::OnGetPlayoutData(AudioUnitRenderActionFlags* flags,
   fine_audio_buffer_->GetPlayoutData(
       rtc::ArrayView<int16_t>(static_cast<int16_t*>(audio_buffer->mData), num_frames),
       kFixedPlayoutDelayEstimate);
+
+  if (nullptr == audio_device_observer_) {
+    // RTCLog(@"audio_device_observer_ is nullptr");
+    return noErr;
+  }
+  //获取送入播放设备的数据（PCM）  
+  audio_device_observer_->OnGetPlayoutAudioData(flags, time_stamp, bus_number, num_frames, io_data);
+
   return noErr;
 }
 

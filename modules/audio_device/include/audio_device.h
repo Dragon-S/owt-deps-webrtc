@@ -20,6 +20,20 @@ namespace webrtc {
 
 class AudioDeviceModuleForTest;
 
+// Only supported on iOS.
+#if defined(WEBRTC_IOS)
+class AduioDeviceObserver {
+ public:
+  virtual ~AduioDeviceObserver() = default;
+
+  virtual void OnGetPlayoutAudioData(void *flags,
+                                    const void *time_stamp,
+                                    uint32_t bus_number,
+                                    uint32_t num_frames,
+                                    void *io_data) = 0;
+};
+#endif  // WEBRTC_IOS
+
 class AudioDeviceModule : public rtc::RefCountInterface {
  public:
   enum AudioLayer {
@@ -150,6 +164,7 @@ class AudioDeviceModule : public rtc::RefCountInterface {
 #if defined(WEBRTC_IOS)
   virtual int GetPlayoutAudioParameters(AudioParameters* params) const = 0;
   virtual int GetRecordAudioParameters(AudioParameters* params) const = 0;
+  virtual int32_t setAudioDeviceObserver(AduioDeviceObserver *observer) = 0;
 #endif  // WEBRTC_IOS
 
  protected:

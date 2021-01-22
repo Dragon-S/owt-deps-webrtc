@@ -127,11 +127,13 @@ class AudioDeviceModuleIOS : public AudioDeviceModule {
 #if defined(WEBRTC_IOS)
   int GetPlayoutAudioParameters(AudioParameters* params) const override;
   int GetRecordAudioParameters(AudioParameters* params) const override;
+  int32_t setAudioDeviceObserver(AduioDeviceObserver *observer) override;
 #endif  // WEBRTC_IOS
  private:
   bool initialized_ = false;
   std::unique_ptr<AudioDeviceIOS> audio_device_;
   std::unique_ptr<AudioDeviceBuffer> audio_device_buffer_;
+  AduioDeviceObserver* audio_device_observer_;
 };
 }  // namespace ios_adm
 }  // namespace webrtc

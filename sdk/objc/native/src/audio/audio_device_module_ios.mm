@@ -43,6 +43,7 @@ namespace ios_adm {
   AudioDeviceModuleIOS::AudioDeviceModuleIOS() {
     RTC_LOG(INFO) << "current platform is IOS";
     RTC_LOG(INFO) << "iPhone Audio APIs will be utilized.";
+    audio_device_observer_ = nullptr;
   }
 
   int32_t AudioDeviceModuleIOS::AttachAudioBuffer() {
@@ -75,6 +76,8 @@ namespace ios_adm {
     RTC_CHECK(audio_device_);
 
     this->AttachAudioBuffer();
+
+    audio_device_->setAudioDeviceObserver(audio_device_observer_);
 
     AudioDeviceGeneric::InitStatus status = audio_device_->Init();
     RTC_HISTOGRAM_ENUMERATION(
@@ -656,6 +659,14 @@ namespace ios_adm {
     int r = audio_device_->GetRecordAudioParameters(params);
     RTC_LOG(INFO) << "output: " << r;
     return r;
+  }
+
+  int32_t AudioDeviceModuleIOS::setAudioDeviceObserver(AduioDeviceObserver *observer) {
+    RTC_LOG(INFO) << __FUNCTION__;
+
+    audio_device_observer_ = observer;
+
+    return 0;
   }
 #endif  // WEBRTC_IOS
 }

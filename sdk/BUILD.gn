@@ -296,6 +296,9 @@ if (is_ios || is_mac) {
           "objc/components/audio/RTCAudioSessionConfiguration.m",
           "objc/components/audio/RTCNativeAudioSessionDelegateAdapter.h",
           "objc/components/audio/RTCNativeAudioSessionDelegateAdapter.mm",
+          "objc/components/audio/RTCAudioDeviceIosObserver+Private.h",
+          "objc/components/audio/RTCAudioDeviceIosObserver.h",
+          "objc/components/audio/RTCAudioDeviceIosObserver.mm",
         ]
         configs += [
           "..:common_objc",
@@ -965,6 +968,7 @@ if (is_ios || is_mac) {
         "objc/Framework/Classes/VideoToolbox/nalu_rewriter.h",
         "objc/Framework/Headers/WebRTC/RTCAudioSession.h",
         "objc/Framework/Headers/WebRTC/RTCAudioSessionConfiguration.h",
+        "objc/Framework/Headers/WebRTC/RTCAudioDeviceIosObserver.h",
         "objc/Framework/Headers/WebRTC/RTCAudioSource.h",
         "objc/Framework/Headers/WebRTC/RTCAudioTrack.h",
         "objc/Framework/Headers/WebRTC/RTCCVPixelBuffer.h",
@@ -1252,6 +1256,7 @@ if (is_ios || is_mac) {
           "objc/base/RTCYUVPlanarBuffer.h",
           "objc/components/audio/RTCAudioSession.h",
           "objc/components/audio/RTCAudioSessionConfiguration.h",
+          "objc/components/audio/RTCAudioDeviceIosObserver.h",
           "objc/components/capturer/RTCCameraVideoCapturer.h",
           "objc/components/capturer/RTCFileVideoCapturer.h",
           "objc/components/renderer/metal/RTCMTLVideoView.h",

@@ -270,6 +270,9 @@ class ADMWrapper : public AudioDeviceModule, public AudioTransport {
   int GetRecordAudioParameters(AudioParameters* params) const override {
     return impl_->GetRecordAudioParameters(params);
   }
+  int32_t setAudioDeviceObserver(AduioDeviceObserver *observer) override {
+    return impl_->setAudioDeviceObserver(observer);
+  }
 #endif  // WEBRTC_IOS
 
  protected:

@@ -121,6 +121,9 @@ class AudioDeviceModuleDefault : public T {
   int GetRecordAudioParameters(AudioParameters* params) const override {
     return -1;
   }
+  int32_t setAudioDeviceObserver(AduioDeviceObserver *observer) override {
+    return -1;
+  }
 #endif  // WEBRTC_IOS
 };
 

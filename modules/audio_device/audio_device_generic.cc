@@ -55,6 +55,12 @@ int AudioDeviceGeneric::GetRecordAudioParameters(
   RTC_LOG_F(LS_ERROR) << "Not supported on this platform";
   return -1;
 }
+
+int32_t AudioDeviceGeneric::setAudioDeviceObserver(
+    AduioDeviceObserver *observer) {
+  RTC_LOG_F(LS_ERROR) << "Not supported on this platform";
+  return -1;
+}
 #endif  // WEBRTC_IOS
 
 }  // namespace webrtc

@@ -50,7 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
                                 audioDeviceModule:
                                     (nullable webrtc::AudioDeviceModule *)audioDeviceModule
                             audioProcessingModule:
-                                (rtc::scoped_refptr<webrtc::AudioProcessing>)audioProcessingModule;
+                                (rtc::scoped_refptr<webrtc::AudioProcessing>)audioProcessingModule
+                              audioDeviceObserver:(nullable id)observer;
 
 - (instancetype)
     initWithNativeAudioEncoderFactory:
@@ -65,7 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
                 audioProcessingModule:
                     (rtc::scoped_refptr<webrtc::AudioProcessing>)audioProcessingModule
                 mediaTransportFactory:
-                    (std::unique_ptr<webrtc::MediaTransportFactory>)mediaTransportFactory;
+                    (std::unique_ptr<webrtc::MediaTransportFactory>)mediaTransportFactory
+                  audioDeviceObserver:(nullable id)observer;
 
 - (instancetype)
     initWithNativeAudioEncoderFactory:
@@ -82,12 +84,14 @@ NS_ASSUME_NONNULL_BEGIN
              networkControllerFactory:(std::unique_ptr<webrtc::NetworkControllerFactoryInterface>)
                                           networkControllerFactory
                 mediaTransportFactory:
-                    (std::unique_ptr<webrtc::MediaTransportFactory>)mediaTransportFactory;
+                    (std::unique_ptr<webrtc::MediaTransportFactory>)mediaTransportFactory
+                  audioDeviceObserver:(nullable id)observer;
 
 - (instancetype)initWithEncoderFactory:(nullable id<RTCVideoEncoderFactory>)encoderFactory
                         decoderFactory:(nullable id<RTCVideoDecoderFactory>)decoderFactory
                  mediaTransportFactory:
-                     (std::unique_ptr<webrtc::MediaTransportFactory>)mediaTransportFactory;
+                     (std::unique_ptr<webrtc::MediaTransportFactory>)mediaTransportFactory
+                   audioDeviceObserver:(nullable id)observer;
 
 - (instancetype)initWithNativePeerConnectionFactory:(
     rtc::scoped_refptr<webrtc::PeerConnectionFactoryInterface>)factory;

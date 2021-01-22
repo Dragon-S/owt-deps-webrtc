@@ -139,6 +139,7 @@ class AudioDeviceModuleImpl : public AudioDeviceModuleForTest {
 #if defined(WEBRTC_IOS)
   int GetPlayoutAudioParameters(AudioParameters* params) const override;
   int GetRecordAudioParameters(AudioParameters* params) const override;
+  int32_t setAudioDeviceObserver(AduioDeviceObserver *observer) override;
 #endif  // WEBRTC_IOS
 
 #if defined(WEBRTC_ANDROID)

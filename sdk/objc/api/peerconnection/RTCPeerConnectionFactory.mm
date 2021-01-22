@@ -46,6 +46,8 @@
 #import "sdk/objc/native/api/audio_device_module.h"
 #endif
 
+#import "components/audio/RTCAudioDeviceIosObserver+Private.h"
+
 // Adding the nogncheck to disable the including header check.
 // The no-media version PeerConnectionFactory doesn't depend on media related
 // C++ target.
@@ -84,14 +86,15 @@
                                                      [[RTCVideoDecoderFactoryH264 alloc] init])
                                audioDeviceModule:[self audioDeviceModule]
                            audioProcessingModule:nullptr
-                           mediaTransportFactory:nullptr];
+                           mediaTransportFactory:nullptr
+                             audioDeviceObserver:nil];
 #endif
 }
 
 - (instancetype)initWithEncoderFactory:(nullable id<RTCVideoEncoderFactory>)encoderFactory
                         decoderFactory:(nullable id<RTCVideoDecoderFactory>)decoderFactory
-                 mediaTransportFactory:
-                     (std::unique_ptr<webrtc::MediaTransportFactory>)mediaTransportFactory {
+                 mediaTransportFactory:(std::unique_ptr<webrtc::MediaTransportFactory>)mediaTransportFactory
+                   audioDeviceObserver:(nullable id)observer {
 #ifdef HAVE_NO_MEDIA
   return [self initWithNoMedia];
 #else
@@ -109,14 +112,25 @@
                        nativeVideoDecoderFactory:std::move(native_decoder_factory)
                                audioDeviceModule:[self audioDeviceModule]
                            audioProcessingModule:nullptr
-                           mediaTransportFactory:std::move(mediaTransportFactory)];
+                           mediaTransportFactory:std::move(mediaTransportFactory)
+                             audioDeviceObserver:observer];
 #endif
 }
 - (instancetype)initWithEncoderFactory:(nullable id<RTCVideoEncoderFactory>)encoderFactory
                         decoderFactory:(nullable id<RTCVideoDecoderFactory>)decoderFactory {
   return [self initWithEncoderFactory:encoderFactory
                        decoderFactory:decoderFactory
-                mediaTransportFactory:nullptr];
+                mediaTransportFactory:nullptr
+                  audioDeviceObserver:nil];
+}
+
+- (instancetype)initWithEncoderFactory:(nullable id<RTCVideoEncoderFactory>)encoderFactory
+                        decoderFactory:(nullable id<RTCVideoDecoderFactory>)decoderFactory
+                        audioDeviceObserver:(nullable id)observer {
+  return [self initWithEncoderFactory:encoderFactory
+                       decoderFactory:decoderFactory
+                mediaTransportFactory:nullptr
+                  audioDeviceObserver:observer];
 }
 
 - (instancetype)initNative {
@@ -161,14 +175,16 @@
                             (std::unique_ptr<webrtc::VideoDecoderFactory>)videoDecoderFactory
                                 audioDeviceModule:(webrtc::AudioDeviceModule *)audioDeviceModule
                             audioProcessingModule:
-                                (rtc::scoped_refptr<webrtc::AudioProcessing>)audioProcessingModule {
+                                (rtc::scoped_refptr<webrtc::AudioProcessing>)audioProcessingModule
+                              audioDeviceObserver:(nullable id)observer {
   return [self initWithNativeAudioEncoderFactory:audioEncoderFactory
                        nativeAudioDecoderFactory:audioDecoderFactory
                        nativeVideoEncoderFactory:std::move(videoEncoderFactory)
                        nativeVideoDecoderFactory:std::move(videoDecoderFactory)
                                audioDeviceModule:audioDeviceModule
                            audioProcessingModule:audioProcessingModule
-                           mediaTransportFactory:nullptr];
+                           mediaTransportFactory:nullptr
+                             audioDeviceObserver:observer];
 }
 
 - (instancetype)initWithNativeAudioEncoderFactory:
@@ -183,7 +199,8 @@
                             audioProcessingModule:
                                 (rtc::scoped_refptr<webrtc::AudioProcessing>)audioProcessingModule
                             mediaTransportFactory:(std::unique_ptr<webrtc::MediaTransportFactory>)
-                                                      mediaTransportFactory {
+                                                      mediaTransportFactory
+                              audioDeviceObserver:(nullable id)observer {
   return [self initWithNativeAudioEncoderFactory:audioEncoderFactory
                        nativeAudioDecoderFactory:audioDecoderFactory
                        nativeVideoEncoderFactory:std::move(videoEncoderFactory)
@@ -191,7 +208,8 @@
                                audioDeviceModule:audioDeviceModule
                            audioProcessingModule:audioProcessingModule
                         networkControllerFactory:nullptr
-                           mediaTransportFactory:std::move(mediaTransportFactory)];
+                           mediaTransportFactory:std::move(mediaTransportFactory)
+                             audioDeviceObserver:observer];
 }
 - (instancetype)initWithNativeAudioEncoderFactory:
                     (rtc::scoped_refptr<webrtc::AudioEncoderFactory>)audioEncoderFactory
@@ -208,7 +226,8 @@
                              (std::unique_ptr<webrtc::NetworkControllerFactoryInterface>)
                                  networkControllerFactory
                             mediaTransportFactory:(std::unique_ptr<webrtc::MediaTransportFactory>)
-                                                      mediaTransportFactory {
+                                                      mediaTransportFactory
+                              audioDeviceObserver:(nullable id)observer {
   if (self = [self initNative]) {
     webrtc::PeerConnectionFactoryDependencies dependencies;
     dependencies.network_thread = _networkThread.get();
@@ -218,6 +237,10 @@
     dependencies.task_queue_factory = webrtc::CreateDefaultTaskQueueFactory();
     cricket::MediaEngineDependencies media_deps;
     media_deps.adm = std::move(audioDeviceModule);
+
+    webrtc::AduioDeviceObserver *audioDeviceObserver = [(RTCAudioDeviceIosObserver *)observer nativeAudioDeviceIosObserver];
+    media_deps.adm->setAudioDeviceObserver(audioDeviceObserver);
+
     media_deps.task_queue_factory = dependencies.task_queue_factory.get();
     media_deps.audio_encoder_factory = std::move(audioEncoderFactory);
     media_deps.audio_decoder_factory = std::move(audioDecoderFactory);

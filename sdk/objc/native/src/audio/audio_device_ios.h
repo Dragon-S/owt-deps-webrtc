@@ -86,6 +86,7 @@ class AudioDeviceIOS : public AudioDeviceGeneric,
   // These methods are unique for the iOS implementation.
   int GetPlayoutAudioParameters(AudioParameters* params) const override;
   int GetRecordAudioParameters(AudioParameters* params) const override;
+  int32_t setAudioDeviceObserver(AduioDeviceObserver *observer) override;
 
   // These methods are currently not fully implemented on iOS:
 
@@ -289,6 +290,8 @@ class AudioDeviceIOS : public AudioDeviceGeneric,
 
   // Contains the time for when the last output volume change was detected.
   int64_t last_output_volume_change_time_ RTC_GUARDED_BY(thread_checker_);
+
+  AduioDeviceObserver *audio_device_observer_;
 };
 }  // namespace ios_adm
 }  // namespace webrtc
