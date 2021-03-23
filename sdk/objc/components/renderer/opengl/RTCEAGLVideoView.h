@@ -37,6 +37,9 @@ NS_EXTENSION_UNAVAILABLE_IOS("Rendering not available in app extensions.")
 
 - (void)clearVideoView;
 
+/// 重置RTCEAGLVideoView的渲染状态，重置后rendersuccess为NO
+- (void)resetRenderStatus;
+
 /** @abstract Wrapped RTCVideoRotation, or nil.
  */
 @property(nonatomic, nullable) NSValue *rotationOverride;

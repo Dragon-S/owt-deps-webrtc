@@ -162,6 +162,10 @@
   }
 }
 
+- (void)resetRenderStatus {
+  self.firstFrameReceived = NO;
+}
+
 - (void)clearVideoView {
   self.firstFrameReceived = NO;
   self.videoFrame = nil;
